@@ -1,4 +1,4 @@
-import {IsDate, IsOptional, IsString, Length} from "class-validator";
+import {IsDateString, IsOptional, IsString, Length} from "class-validator";
 import {ObjectId} from "mongoose";
 
 export class UpdateCommentDto {
@@ -23,6 +23,6 @@ export class UpdateCommentDto {
     description?: string;
 
     @IsOptional()
-    @IsDate()
+    @IsDateString()
     createDate?: Date;
 }

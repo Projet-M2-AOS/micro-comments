@@ -1,4 +1,4 @@
-import {IsDate, IsNotEmpty, IsString, Length} from "class-validator";
+import {IsDateString, IsNotEmpty, IsString, Length} from "class-validator";
 import {ObjectId} from "mongoose";
 
 export class CreateCommentDto {
@@ -24,6 +24,6 @@ export class CreateCommentDto {
     description: string;
 
     @IsNotEmpty()
-    @IsDate()
+    @IsDateString()
     createDate: Date;
 }

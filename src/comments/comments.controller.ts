@@ -3,6 +3,7 @@ import {CommentsService} from "./comments.service";
 import {Comment} from "./comment.schema";
 import {CreateCommentDto} from "./dto/create.comment.dto";
 import {UpdateCommentDto} from "./dto/update.comment.dto";
+import {ObjectId} from "mongoose";
 
 @Controller('comments')
 export class CommentsController {
@@ -14,7 +15,7 @@ export class CommentsController {
     }
 
     @Get(':idComment')
-    async getCommentById(@Param('idComment') id: string): Promise<Comment> {
+    async getCommentById(@Param('idComment') id: ObjectId): Promise<Comment> {
         const comment = await this.commentsService.findById(id)
 
         if (!comment) {
@@ -35,7 +36,7 @@ export class CommentsController {
     }
 
     @Put(':idComment')
-    async updateComment(@Param('idComment') id: string, @Body() updateCommentDto: UpdateCommentDto): Promise<Comment> {
+    async updateComment(@Param('idComment') id: ObjectId, @Body() updateCommentDto: UpdateCommentDto): Promise<Comment> {
         let comment: Comment;
 
         try {
@@ -59,7 +60,7 @@ export class CommentsController {
 
     @Delete(':idComment')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async deleteComment(@Param('idComment') id: string) {
+    async deleteComment(@Param('idComment') id: ObjectId) {
         let comment: Comment;
         try {
             comment = await this.commentsService.findById(id)
