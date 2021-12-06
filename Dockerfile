@@ -9,5 +9,5 @@ RUN npm run build
 FROM node:16.13.1-alpine3.14
 WORKDIR /app
 COPY --from=builder /app ./
-EXPOSE 3003
+EXPOSE 3002
 CMD ["npm", "run", "start:prod"]
