@@ -14,6 +14,10 @@ export class CommentsService {
         return comment.save();
     }
 
+    async createMany(createCommentDto: CreateCommentDto[]): Promise<Comment[]> {
+        return this.commentModel.insertMany(createCommentDto);
+    }
+
     delete(id: ObjectId) {
         return this.commentModel.findByIdAndDelete(id).exec()
     }

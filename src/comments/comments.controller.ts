@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Post, Put} from '@nestjs/common';
+import {Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, ParseArrayPipe, Post, Put} from '@nestjs/common';
 import {CommentsService} from "./comments.service";
 import {Comment} from "./comment.schema";
 import {CreateCommentDto} from "./dto/create.comment.dto";
@@ -27,9 +27,9 @@ export class CommentsController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    async createComment(@Body() createCommentDto: CreateCommentDto) {
+    async createComment(@Body(new ParseArrayPipe({ items: CreateCommentDto })) createCommentDto: CreateCommentDto[]) {
         try {
-            return await this.commentsService.create(createCommentDto)
+            return await this.commentsService.createMany(createCommentDto)
         } catch (e) {
             throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
         }
