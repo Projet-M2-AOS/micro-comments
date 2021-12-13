@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {Model, ObjectId} from "mongoose";
+import {FilterQuery, Model, ObjectId} from "mongoose";
 import {InjectModel} from "@nestjs/mongoose";
 import {Comment, CommentDocument} from "./comment.schema";
 import {UpdateCommentDto} from "./dto/update.comment.dto";
@@ -22,8 +22,8 @@ export class CommentsService {
         return this.commentModel.findByIdAndUpdate(id, updateCommentDto).exec()
     }
 
-    async findAll(): Promise<Comment[]> {
-        return this.commentModel.find().exec();
+    async find(filter: FilterQuery<CommentDocument>): Promise<Comment[]> {
+        return this.commentModel.find(filter).exec();
     }
 
     async findById(id: ObjectId): Promise<Comment> {

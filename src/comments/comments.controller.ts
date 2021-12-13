@@ -1,21 +1,34 @@
-import {Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Post, Put} from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    HttpException,
+    HttpStatus,
+    Param,
+    Post,
+    Put,
+    Query
+} from '@nestjs/common';
 import {CommentsService} from "./comments.service";
 import {Comment} from "./comment.schema";
 import {CreateCommentDto} from "./dto/create.comment.dto";
 import {UpdateCommentDto} from "./dto/update.comment.dto";
 import {ObjectId} from "mongoose";
+import {ParseObjectIdPipe} from "../pipe/parse-mongoose-id.pipe";
 
 @Controller('comments')
 export class CommentsController {
     constructor(private commentsService: CommentsService) {}
 
     @Get()
-    getAllComments(): Promise<Comment[]> {
-        return this.commentsService.findAll()
+    getComments(@Query('productId', ParseObjectIdPipe) productId: ObjectId): Promise<Comment[]> {
+        return this.commentsService.find({productId})
     }
 
     @Get(':idComment')
-    async getCommentById(@Param('idComment') id: ObjectId): Promise<Comment> {
+    async getCommentById(@Param('idComment', ParseObjectIdPipe) id: ObjectId): Promise<Comment> {
         const comment = await this.commentsService.findById(id)
 
         if (!comment) {
@@ -36,7 +49,7 @@ export class CommentsController {
     }
 
     @Put(':idComment')
-    async updateComment(@Param('idComment') id: ObjectId, @Body() updateCommentDto: UpdateCommentDto): Promise<Comment> {
+    async updateComment(@Param('idComment', ParseObjectIdPipe) id: ObjectId, @Body() updateCommentDto: UpdateCommentDto): Promise<Comment> {
         let comment: Comment;
 
         try {
@@ -60,7 +73,7 @@ export class CommentsController {
 
     @Delete(':idComment')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async deleteComment(@Param('idComment') id: ObjectId) {
+    async deleteComment(@Param('idComment', ParseObjectIdPipe) id: ObjectId) {
         let comment: Comment;
         try {
             comment = await this.commentsService.findById(id)
