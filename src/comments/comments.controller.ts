@@ -5,17 +5,45 @@ import {CreateCommentDto} from "./dto/create.comment.dto";
 import {UpdateCommentDto} from "./dto/update.comment.dto";
 import {ObjectId} from "mongoose";
 import {ParseObjectIdPipe} from "../pipe/parse-mongoose-id.pipe";
+import {ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
 
 @Controller('comments')
+@ApiTags('micro-comments')
 export class CommentsController {
     constructor(private commentsService: CommentsService) {}
 
     @Get()
+    @ApiOperation({
+        summary: 'Get comments based on filters'
+    })
+    @ApiQuery({
+        name: 'productId',
+        description: 'The productId filter',
+        schema: {
+            type: 'string'
+        }
+    })
+    @ApiResponse({status: HttpStatus.OK, type: [Comment]})
+    @ApiResponse({status: HttpStatus.BAD_REQUEST, description: 'Invalid id supplied'})
     getComments(@Query('productId', ParseObjectIdPipe) productId: ObjectId): Promise<Comment[]> {
         return this.commentsService.find({productId})
     }
 
     @Get(':idComment')
+    @ApiOperation({
+        summary: 'Get comments by id'
+    })
+    @ApiParam({
+        name: 'idComment',
+        description: 'The id of the comment you want to get',
+        required: true,
+        schema: {
+            type: 'string'
+        }
+    })
+    @ApiResponse({status: HttpStatus.OK, type: Comment})
+    @ApiResponse({status: HttpStatus.BAD_REQUEST, description: 'Invalid id supplied'})
+    @ApiResponse({status: HttpStatus.NOT_FOUND, description: 'Comment not found'})
     async getCommentById(@Param('idComment', ParseObjectIdPipe) id: ObjectId): Promise<Comment> {
         const comment = await this.commentsService.findById(id)
 
@@ -28,6 +56,12 @@ export class CommentsController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
+    @ApiOperation({
+        summary: 'Create comments'
+    })
+    @ApiBody({type: [CreateCommentDto]})
+    @ApiResponse({status: HttpStatus.OK, type: [Comment], description: 'The comments created'})
+    @ApiResponse({status: HttpStatus.BAD_REQUEST, description: 'Invalid schema supplied'})
     async createComment(@Body(new ParseArrayPipe({ items: CreateCommentDto })) createCommentDto: CreateCommentDto[]) {
         try {
             return await this.commentsService.createMany(createCommentDto)
@@ -37,6 +71,20 @@ export class CommentsController {
     }
 
     @Put(':idComment')
+    @ApiOperation({
+        summary: 'Update one comment'
+    })
+    @ApiParam({
+        name: 'idComment',
+        description: 'The id of the comment you want to update',
+        required: true,
+        schema: {
+            type: 'string'
+        }
+    })
+    @ApiResponse({status: HttpStatus.OK, type: Comment, description: 'The comment updated'})
+    @ApiResponse({status: HttpStatus.BAD_REQUEST, description: 'Invalid schema supplied'})
+    @ApiResponse({status: HttpStatus.NOT_FOUND, description: 'Comment not found'})
     async updateComment(@Param('idComment', ParseObjectIdPipe) id: ObjectId, @Body() updateCommentDto: UpdateCommentDto): Promise<Comment> {
         let comment: Comment;
 
@@ -61,6 +109,20 @@ export class CommentsController {
 
     @Delete(':idComment')
     @HttpCode(HttpStatus.NO_CONTENT)
+    @ApiOperation({
+        summary: 'Delete one comment'
+    })
+    @ApiParam({
+        name: 'idComment',
+        description: 'The id of the comment you want to delete',
+        required: true,
+        schema: {
+            type: 'string'
+        }
+    })
+    @ApiResponse({status: HttpStatus.NO_CONTENT, description: 'Successfully deleted'})
+    @ApiResponse({status: HttpStatus.NOT_FOUND, description: 'Comment not found'})
+    @ApiResponse({status: HttpStatus.BAD_REQUEST, description: 'Invalid id supplied'})
     async deleteComment(@Param('idComment', ParseObjectIdPipe) id: ObjectId) {
         let comment: Comment;
         try {
