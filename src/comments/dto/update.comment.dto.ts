@@ -6,13 +6,13 @@ export class UpdateCommentDto {
     @IsOptional()
     @IsString()
     @Length(0, 100)
-    @ApiProperty({type: String, required: false, minLength: 0, maxLength: 100})
+    @ApiProperty({type: String, format: 'mongo-id', required: false, minLength: 0, maxLength: 100})
     user?: ObjectId;
 
     @IsOptional()
     @IsString()
     @Length(0, 100)
-    @ApiProperty({type: String, required: false, minLength: 0, maxLength: 100})
+    @ApiProperty({type: String, format: 'mongo-id', required: false, minLength: 0, maxLength: 100})
     product?: ObjectId;
 
     @IsOptional()

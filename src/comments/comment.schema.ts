@@ -7,15 +7,15 @@ export type CommentDocument = Comment & Document;
 
 @Schema()
 export class Comment {
-    @ApiProperty({type: String, minLength: 0, maxLength: 100})
+    @ApiProperty({type: String, format: 'mongo-id', minLength: 0, maxLength: 100})
     _id: ObjectId
 
     @Prop({type: mongoose.Schema.Types.ObjectId})
-    @ApiProperty({type: String, minLength: 0, maxLength: 100})
+    @ApiProperty({type: String, format: 'mongo-id', minLength: 0, maxLength: 100})
     user: ObjectId;
 
     @Prop({type: mongoose.Schema.Types.ObjectId})
-    @ApiProperty({type: String, minLength: 0, maxLength: 100})
+    @ApiProperty({type: String, format: 'mongo-id', minLength: 0, maxLength: 100})
     product: ObjectId;
 
     @Prop()

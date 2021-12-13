@@ -20,7 +20,8 @@ export class CommentsController {
         name: 'productId',
         description: 'The productId filter',
         schema: {
-            type: 'string'
+            type: 'string',
+            format: 'mongo-id'
         }
     })
     @ApiResponse({status: HttpStatus.OK, type: [Comment]})
@@ -38,7 +39,8 @@ export class CommentsController {
         description: 'The id of the comment you want to get',
         required: true,
         schema: {
-            type: 'string'
+            type: 'string',
+            format: 'mongo-id'
         }
     })
     @ApiResponse({status: HttpStatus.OK, type: Comment})
@@ -79,7 +81,8 @@ export class CommentsController {
         description: 'The id of the comment you want to update',
         required: true,
         schema: {
-            type: 'string'
+            type: 'string',
+            format: 'mongo-id'
         }
     })
     @ApiResponse({status: HttpStatus.OK, type: Comment, description: 'The comment updated'})
@@ -117,7 +120,8 @@ export class CommentsController {
         description: 'The id of the comment you want to delete',
         required: true,
         schema: {
-            type: 'string'
+            type: 'string',
+            format: 'mongo-id'
         }
     })
     @ApiResponse({status: HttpStatus.NO_CONTENT, description: 'Successfully deleted'})

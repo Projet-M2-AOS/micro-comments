@@ -7,13 +7,13 @@ export class CreateCommentDto {
     @IsNotEmpty()
     @IsString()
     @Length(0, 100)
-    @ApiProperty({type: String, minLength: 0, maxLength: 100})
+    @ApiProperty({type: String, format: 'mongo-id',minLength: 0, maxLength: 100})
     user: ObjectId;
 
     @IsNotEmpty()
     @IsString()
     @Length(0, 100)
-    @ApiProperty({type: String, minLength: 0, maxLength: 100})
+    @ApiProperty({type: String, format: 'mongo-id',minLength: 0, maxLength: 100})
     product: ObjectId;
 
     @IsNotEmpty()
