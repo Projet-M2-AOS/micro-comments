@@ -7,13 +7,17 @@ import { Types } from 'mongoose';
  */
 @Injectable()
 export class ParseObjectIdPipe implements PipeTransform<any, Types.ObjectId> {
-    transform(value: any): Types.ObjectId {
-        const validObjectId = Types.ObjectId.isValid(value);
+    transform(value: any): Types.ObjectId | undefined {
+        if (value) {
+            const validObjectId = Types.ObjectId.isValid(value);
 
-        if (!validObjectId) {
-            throw new BadRequestException('Invalid ObjectId');
+            if (!validObjectId) {
+                throw new BadRequestException('Invalid ObjectId');
+            }
+
+            return <Types.ObjectId>Types.ObjectId.createFromHexString(value);
+        } else {
+            return undefined
         }
-
-        return <Types.ObjectId>Types.ObjectId.createFromHexString(value);
     }
 }

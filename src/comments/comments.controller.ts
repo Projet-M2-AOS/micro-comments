@@ -1,9 +1,9 @@
 import {Body, Query, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, ParseArrayPipe, Post, Put} from '@nestjs/common';
 import {CommentsService} from "./comments.service";
-import {Comment} from "./comment.schema";
+import {Comment, CommentDocument} from "./comment.schema";
 import {CreateCommentDto} from "./dto/create.comment.dto";
 import {UpdateCommentDto} from "./dto/update.comment.dto";
-import {ObjectId} from "mongoose";
+import {FilterQuery, ObjectId} from "mongoose";
 import {ParseObjectIdPipe} from "../pipe/parse-mongoose-id.pipe";
 import {ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
 
@@ -26,8 +26,14 @@ export class CommentsController {
     })
     @ApiResponse({status: HttpStatus.OK, type: [Comment]})
     @ApiResponse({status: HttpStatus.BAD_REQUEST, description: 'Invalid id supplied'})
-    getComments(@Query('productId', ParseObjectIdPipe) productId: ObjectId): Promise<Comment[]> {
-        return this.commentsService.find({productId})
+    getComments(@Query('productId', ParseObjectIdPipe) productId: ObjectId | undefined): Promise<Comment[]> {
+        const filter: FilterQuery<CommentDocument> = {}
+
+        if (productId) {
+            filter.product = productId;
+        }
+
+        return this.commentsService.find(filter)
     }
 
     @Get(':idComment')
